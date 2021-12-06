@@ -29,6 +29,7 @@ int bitAt(long int bits, int pos){
     return dec;
 }
 
+
 void part2()
 {
    FILE *f;
