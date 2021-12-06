@@ -3,8 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-#define BITS 5
-//#define BITS 12
+#define BITS 12
 
 int bin2dec(long int bin){
     int dec=0;
@@ -12,7 +11,6 @@ int bin2dec(long int bin){
 
     for (size_t i = 0; aux>0; i++)
     {
-        //printf("%d\n",aux%10);
         dec+=aux%10<<i;
         aux=aux/10;
     }
@@ -35,72 +33,97 @@ void part2()
 {
    FILE *f;
 
-    f = fopen("sample.txt","r");
+    f = fopen("input.txt","r");
 
     long int bits;
-    int comm[2]={0};
+    int commoxy[2]={0},commdiox[2]={0};
     int oxygen=0,diox=0,oxy,dio;
 
     int countoxy,countdiox;
-    int bit,mostcomm,equal;
+    int bit,mostcommoxy,mostcommdiox,equaloxy,equaldiox;
     long int andoxy=0,anddiox=0;
-    long int aux = 0;
 
     for (int i = BITS-1; i >= 0; i--)
     {
-        comm[0]=0; comm[1]=0;
-        printf("%ld\n",andoxy);
+        commoxy[0]=0; commoxy[1]=0;
+        commdiox[0]=0; commdiox[1]=0;
         
         while (fscanf(f,"%ld",&bits)!=EOF)
         {   
-            //printf("%d %d\n",bin2dec(bits) ^ bin2dec(andoxy),aux);
-            if ((bin2dec(bits) ^ bin2dec(andoxy) < aux) || i==BITS-1)
+            if (((bin2dec(bits) ^ bin2dec(andoxy)) < 1<<(i+1)) || i==BITS-1)
             {
                 bit = bitAt(bits,i);
-                comm[bit]=comm[bit]+1;
+                commoxy[bit]=commoxy[bit]+1;
+            }  
+
+            if (((bin2dec(bits) ^ bin2dec(anddiox)) < 1<<(i+1)) || i==BITS-1)
+            {
+                bit = bitAt(bits,i);
+                commdiox[bit]=commdiox[bit]+1;
             }  
         }
 
-        aux+=1<<i;
-
-        printf("%d %d\n", comm[0],comm[1]);
-
-        equal=0;
-        if(comm[1]>comm[0]) {
-            mostcomm=1;
+        equaloxy=0; equaldiox=0;
+        if(commoxy[1]>commoxy[0]) {
+            mostcommoxy=1;
             andoxy+=pow(10,i); 
         }
-        else if(comm[0]>comm[1]) mostcomm=0;
-        else if(comm[1]==comm[0]) {
-            equal=1;
+        else if(commoxy[0]>commoxy[1]) {
+            mostcommoxy=0;
+        }
+        else if(commoxy[1]==commoxy[0]) {
+            equaloxy=1;
             andoxy+=pow(10,i);
+        }
+
+        if(commdiox[1]>commdiox[0]) {
+            mostcommdiox=1;
+        }
+        else if(commdiox[0]>commdiox[1]) {
+            mostcommdiox=0;
+            anddiox+=pow(10,i); 
+        }
+        else if(commdiox[1]==commdiox[0]) {
+            equaldiox=1;
         }
 
         rewind(f);
 
-        countoxy=0;
         while (fscanf(f,"%ld",&bits)!=EOF)
         {   
-            if(bitAt(bits,i)==mostcomm && !equal){
-                oxy = bin2dec(bits);
-                countoxy++;
-            }
-            
-            else if(equal){
-                if(bitAt(bit,i) == 1){
+            if(((bin2dec(bits) ^ bin2dec(andoxy)) < 1<<(i+1))){
+                if(bitAt(bits,i)==mostcommoxy && !equaloxy){
                     oxy = bin2dec(bits);
-                    countoxy++;
+                }
+                else if(equaloxy){
+                    if(bitAt(bit,i) == 1){
+                        oxy = bin2dec(bits);
+                    }
                 }
             }
 
+            if(((bin2dec(bits) ^ bin2dec(anddiox)) < 1<<(i+1))){
+                if(bitAt(bits,i)!=mostcommdiox && !equaldiox){
+                    dio = bin2dec(bits);
+                }
+                else if(equaldiox){
+                    if(bitAt(bit,i) == 0){
+                        dio = bin2dec(bits);
+                    }
+                }
+
+                
+            }
+            
         }
 
         rewind(f);
         
-        if(countoxy==1) oxygen = oxy;
+        oxygen = oxy;
+        diox = dio;
     }
     
-    printf("oxygen: %d\ndiox: %d\n", oxygen,diox);
+    //printf("oxygen: %d\ndiox: %d\n", oxygen,diox);
 
     printf("Part 2: %d\n", oxygen*diox);
     
@@ -120,7 +143,6 @@ void part1()
 
     while (fscanf(f,"%ld",&bits)!=EOF)
     {   
-        //printf("%ld\n",bits);
         for (size_t i = 0; i < BITS; i++)
         {
             comm[1-bits%10][i]++;
@@ -142,8 +164,7 @@ void part1()
 
 int main()
 {
-    //printf("%d\n",compareBits(1101,1111,2));
-    //part1();
+    part1();
     part2();
     return 0;
 }
