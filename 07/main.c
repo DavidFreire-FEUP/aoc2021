@@ -17,7 +17,6 @@ void part1()
     char line[4096];
     USINT count=0;
     
-
     fgets(line,4096,f);
 
     char *token = strtok(line,",");
@@ -63,18 +62,11 @@ void part1()
         USINT sum_middle = sorted[count/2]+sorted[count/2-1];
         median = (sum_middle)/2;       
     }
-    else
-    {
-        median = sorted[(count-1)/2];
-    }
+    else median = sorted[(count-1)/2];
 
-    
     UINT total_fuel=0;
-    for (size_t i = 0; i < count; i++)
-    {
-        total_fuel += abs(median-sorted[i]);
-    }
-    
+    for (size_t i = 0; i < count; i++) total_fuel += abs(median-sorted[i]);
+
     printf("Part 1: %d\n", total_fuel);
     return;
 }
@@ -113,22 +105,14 @@ void part2()
     long unsigned int total_fuel=0;
     USINT avg = sum/count;
 
-
     for (size_t i = 0; i < count; i++)
     {
-        for (size_t j = 0; j <= abs((int)avg-(int)points[i]); j++)
-        {
-            total_fuel+=j;
-        }
-        
+        for (size_t j = 0; j <= abs((int)avg-(int)points[i]); j++) total_fuel+=j;
     }
     
     printf("Part 2: %lu\n", total_fuel);
     return;
 }
-
-
-
 
 int main()
 {
