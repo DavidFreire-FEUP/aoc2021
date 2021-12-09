@@ -29,7 +29,7 @@ void part1()
 {
     FILE *f;
 
-    f = fopen("sample.txt","r");
+    f = fopen("input.txt","r");
 
     char map[MAP_ROWS][MAP_COLUMNS];
     char line[MAP_COLUMNS];
