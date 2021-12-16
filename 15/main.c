@@ -5,8 +5,6 @@
 #include <assert.h>
 #include <math.h>
 
-//#include "minheap.h"
-
 typedef unsigned short int USINT;
 typedef unsigned int UINT;
 typedef unsigned long long int ULLI;
@@ -146,6 +144,30 @@ int dijkstra(int side, int grid[side][side])
                 {
                     dist[u.i][u.j+1] = dist[u.i][u.j] + grid[u.i][u.j+1];
                     v.i = u.i; v.j = u.j+1;
+                    if(!isEmpty(&pq))  
+                        push(&pq, v, dist[v.i][v.j]);
+                    else pq = newNode(v, dist[v.i][v.j]);  
+                }
+            }
+
+            if(u.i-1 > 0)
+            {
+                if(dist[u.i][u.j] + grid[u.i-1][u.j] < dist[u.i-1][u.j])
+                {
+                    dist[u.i-1][u.j] = dist[u.i][u.j] + grid[u.i-1][u.j];
+                    v.i = u.i-1; v.j = u.j;
+                    if(!isEmpty(&pq))  
+                        push(&pq, v, dist[v.i][v.j]);
+                    else pq = newNode(v, dist[v.i][v.j]);  
+                }
+            }
+
+            if(u.j-1 > 0 ) 
+            {
+                if(dist[u.i][u.j] + grid[u.i][u.j-1] < dist[u.i][u.j-1])
+                {
+                    dist[u.i][u.j-1] = dist[u.i][u.j] + grid[u.i][u.j-1];
+                    v.i = u.i; v.j = u.j-1;
                     if(!isEmpty(&pq))  
                         push(&pq, v, dist[v.i][v.j]);
                     else pq = newNode(v, dist[v.i][v.j]);  
