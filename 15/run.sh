@@ -2,5 +2,5 @@
 
 set -xe
 
-clang main.c -o main -lm
+clang -O3 main.c -o main -lm 
 ./main
