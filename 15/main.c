@@ -5,8 +5,6 @@
 #include <assert.h>
 #include <math.h>
 
-//#include "minheap.h"
-
 typedef unsigned short int USINT;
 typedef unsigned int UINT;
 typedef unsigned long long int ULLI;
@@ -40,10 +38,10 @@ Node* newNode(Coord xy, int dist)
     return temp;
 }
  
-int peekd(Node** head){
+int peekDistance(Node** head){
     return (*head)->dist;
 }
-Coord peekxy(Node** head){
+Coord peekCoord(Node** head){
     return (*head)->xy;
 }
 
@@ -102,6 +100,19 @@ void printHeap(Node *heap)
     
 }
 
+void printDist(int side, int dist[side][side])
+{
+    for (size_t i = 0; i < side; i++)
+    {
+        for (size_t j = 0; j < side; j++)
+        {
+            printf("%d ",dist[i][j]);
+        }
+        printf("\n");
+    }
+    return;
+}
+
 int dijkstra(int side, int grid[side][side])
 {
     int dist[side][side]; 
@@ -121,8 +132,8 @@ int dijkstra(int side, int grid[side][side])
     Coord u,v;
 
     while (!isEmpty(&pq)) {
-        int d = peekd(&pq);
-        u = peekxy(&pq);
+        int d = peekDistance(&pq);
+        u = peekCoord(&pq);
         pop(&pq);
 
         if(!visited[u.i][u.j])
@@ -154,15 +165,7 @@ int dijkstra(int side, int grid[side][side])
         }
     }
 
-    /*for (size_t i = 0; i < side; i++)
-    {
-        for (size_t j = 0; j < side; j++)
-        {
-            printf("%d ",dist[i][j]);
-        }
-        printf("\n");
-        
-    }*/
+    //printDist(side, dist);
 
     return dist[side-1][side-1];
 }
@@ -178,7 +181,7 @@ void part1()
     for (size_t i = 0; fscanf(f,"%s",line)!=EOF && i<GRID_SIDE; i++) 
         for (size_t j = 0; j < GRID_SIDE; j++) grid[i][j] = line[j] - '0';
 
-    grid[0][0] = GRID_SIDE==10 ? 1 : 7;
+    grid[0][0] = GRID_SIDE == 10 ? 1 : 7;
 
     int result = dijkstra(GRID_SIDE,grid);
     printf("Part 1: %d\n",result);
